@@ -21,6 +21,7 @@
             </div>
             @endif
             @if (session('failures'))
+            {{-- @dump(session('failures')) --}}
             <div class="alert alert-danger" role="alert">
                 Baris Ada Yang Error
                 <table class="table text-white">
@@ -29,6 +30,7 @@
                             <th>Row</th>
                             <th>Attribute</th>
                             <th>Error</th>
+                            <th>value</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,7 +38,14 @@
                         <tr>
                             <td>{{ $failure->row() }}</td>
                             <td>{{ $failure->attribute() }}</td>
-                            <td>{{ $failure->errors()[0] }}</td>
+                            <td>
+                                <ul>
+                                    @foreach ($failure->errors() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                            <td>{{ $failure->values()[$failure->attribute()] }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -47,36 +56,48 @@
                 @csrf
                 @method('PATCH')
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h6>Data Pemilih</h6>
                         <div class="btn-all">
-                            {{-- Button Reset --}}
-                            <button type="submit" id="resetChekedVotes" class="btn btn-warning"><i
-                                    class="bi bi-trash-fill"></i> Reset
-                                Vote</button>
+                            <div class="btn-master">
+                                {{-- Button Reset --}}
+                                <button type="submit" id="resetChekedVotes" class="btn btn-warning"><i
+                                        class="bi bi-trash-fill"></i> Reset
+                                    Vote</button>
 
-                            {{-- Buton Import --}}
-                            <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                data-bs-target="#importModal">
-                                <i class="bi bi-file-earmark-spreadsheet-fill"></i> Import Pemilih
-                            </button>
+                                {{-- Buton Import --}}
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                    data-bs-target="#importModal">
+                                    <i class="bi bi-file-earmark-spreadsheet-fill"></i> Import Pemilih
+                                </button>
 
-                            {{-- Tambah Pemilih --}}
-                            <a href="{{ route('pemilih.create') }}" class="btn btn-primary">
-                                <i class="bi bi-plus-circle-fill"></i> Tambah Pemilih
-                            </a>
+                                {{-- Tambah Pemilih --}}
+                                <a href="{{ route('pemilih.create') }}" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle-fill"></i> Tambah Pemilih
+                                </a>
+                            </div>
+                            <div class="btn-export mt-3">
+                                {{-- Tambah Pemilih --}}
+                                <a href="{{ route('pemilih.export.pdf') }}" target="_blank" class="btn btn-danger">
+                                    <i class="bi bi-file-earmark-pdf-fill"></i> Export PDF
+                                </a>
+                                {{-- Tambah Pemilih --}}
+                                <a href="{{ route('pemilih.export.excel') }}" class="btn btn-success">
+                                    <i class="bi bi-file-earmark-spreadsheet-fill"></i> Export Excel
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-bordered data-table" style="width: 100%">
                             <thead>
                                 <tr>
-                                    <th>Pemilih Terbaru</th>
                                     <th>Nama</th>
                                     <th>Nim</th>
                                     <th>Angkatan</th>
                                     <th>Kelas</th>
                                     <th>Vote</th>
+                                    <th>Voting</th>
                                     <th>Select Vote</th>
                                 </tr>
                             </thead>
@@ -105,12 +126,12 @@
             serverSide: true,
             ajax: "{{ route('pemilih.index') }}",
             columns: [
-                {data: 'created_at', name: 'created_at'},
                 {data: 'nama', name: 'nama'},
                 {data: 'nim', name: 'nim'},
                 {data: 'angkatan', name: 'angkatan'},
                 {data: 'kelas', name: 'kelas'},
                 {data: 'vote', name: 'vote', orderable: false, searchable: false},
+                {data: 'voting', name: 'voting', orderable: false, searchable: false},
                 {data: 'checkVote', name: 'checkVote', orderable: false, searchable: false},
                 ]
             });

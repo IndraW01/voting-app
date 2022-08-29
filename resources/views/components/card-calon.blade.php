@@ -3,8 +3,7 @@
     <div class="card shadow collapse-icon accordion-icon-rotate">
         <div class="card-header d-flex flex-column justify-center align-items-center">
             <h6 class="text-center">{{ $calon->nama }}</h6>
-            <img src="https://source.unsplash.com/random/200x200/?person" class="img-thumbnail" width="100%"
-                alt="{{ $calon->nim }}">
+            <img src="{{ asset('storage/calon/' . $calon->foto_calon) }}" class="img-thumbnail" alt="{{ $calon->nim }}">
         </div>
         <div class="card-content">
             <div class="card-body">
@@ -35,9 +34,7 @@
                         <div id="collapseTwo{{ $calon->nim }}" class="accordion-collapse collapse"
                             aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                             <div class="accordion-body text-black">
-                                <ul>
-                                    {!! $calon->kampanye->misi !!}
-                                </ul>
+                                {!! $calon->kampanye->misi !!}
                             </div>
                         </div>
                     </div>
@@ -54,5 +51,5 @@
     </div>
 </div>
 @empty
-<h3>Tidak Ada Calon Aktif</h3>
+<h6 class="text-center">Tidak Ada Calon Aktif</h6>
 @endforelse

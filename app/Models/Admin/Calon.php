@@ -39,4 +39,12 @@ class Calon extends Model
     {
         return $this->has('kampanye')->with(['kampanye'])->withCount('votings as jumlah_voting')->tampil()->get();
     }
+
+    public function aktifCalon()
+    {
+        if($this->whereCalonkan(true)->count() >= 3) {
+            return true;
+        }
+        return false;
+    }
 }

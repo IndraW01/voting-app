@@ -24,7 +24,8 @@ class DashboardVotingController extends Controller
     public function index()
     {
         return response()->view('user.dashboard', [
-            'tampilCalon' => $this->calon->tampilCalon()
+            'tampilCalon' => $this->calon->tampilCalon(),
+            'pemilih' => Auth::user()->pemilih()->without('voting')->first()
         ]);
     }
 
@@ -38,7 +39,7 @@ class DashboardVotingController extends Controller
             DB::commit();
 
             return back()->with('successVote', 'Berhasil Melakukan Vote untuk calon ' . $pemilihvote->calon->nama);
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
 
             dd($exception->getMessage());

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\PemilihsExport;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StorePemilihRequest;
 use App\Http\Requests\UpdatePemilihRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PemilihController extends Controller
 {
@@ -25,7 +27,7 @@ class PemilihController extends Controller
     private Pemilih $pemilih;
     private RegisterRepository $registerRepository;
 
-    public function __construct(Pemilih $pemilih, PemilihImport $pemilihImport, RegisterRepository $registerRepository)
+    public function __construct(Pemilih $pemilih, RegisterRepository $registerRepository)
     {
         $this->pemilih = $pemilih;
         $this->registerRepository = $registerRepository;
@@ -94,40 +96,6 @@ class PemilihController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Admin\Pemilih  $pemilih
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Pemilih $pemilih)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Admin\Pemilih  $pemilih
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Pemilih $pemilih)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdatePemilihRequest  $request
-     * @param  \App\Models\Admin\Pemilih  $pemilih
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdatePemilihRequest $request, Pemilih $pemilih)
-    {
-        //
-    }
-
-    /**
      * Update reset vote after checked
      *
      * @param  \App\Http\Requests\UpdatePemilihRequest  $request
@@ -135,7 +103,7 @@ class PemilihController extends Controller
      */
     public function reset(UpdatePemilihRequest $request)
     {
-        if(!$request->vote) {
+        if (!$request->vote) {
             return back()->withErrors(['vote.*' => 'Checked Pemilih yang ingin di reset']);
         }
 
@@ -149,22 +117,11 @@ class PemilihController extends Controller
             Alert::success('Berhasil', 'Berhasil Hapus Vote yang di pilih');
 
             return back();
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
 
             dd($exception->getMessage());
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Admin\Pemilih  $pemilih
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Pemilih $pemilih)
-    {
-        //
     }
 
     public function import(Request $request)
@@ -180,5 +137,19 @@ class PemilihController extends Controller
         }
 
         return back()->with('success', 'Berhasil Import Excel');
+    }
+
+    public function exportPdf()
+    {
+        $pdf = Pdf::loadView('admin.cetak.pemilih-pdf', [
+            'pemilihs' => Pemilih::with(['voting' => ['calon']])->get()
+        ]);
+
+        return $pdf->stream('rekap-pemilih.pdf');
+    }
+
+    public function exportExcel()
+    {
+        return (new PemilihsExport)->download('rekap-pemilih.xlsx');
     }
 }

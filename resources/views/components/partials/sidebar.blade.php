@@ -56,6 +56,13 @@
                         <span>Data Pemilih</span>
                     </a>
                 </li>
+
+                <li class="sidebar-item {{ request()->routeIs('calon*') ? 'active' : '' }} ">
+                    <a href="{{ route('calon.index') }}" class='sidebar-link'>
+                        <i class="bi bi-people-fill"></i>
+                        <span>Data Calon</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

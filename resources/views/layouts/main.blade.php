@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Voting APP</title>
+    <title>{{ $title }}</title>
 
     {{-- Style Wajib --}}
     <link rel="stylesheet" href="{{ asset('assets/css/main/app.css') }}">

@@ -3,9 +3,10 @@
         <section class="row">
             <div class="col-12 col-lg-9">
                 <div class="row">
+
                     <x-card-total color="purple" :total="$tampilPemilih[0]->total_pemilih" text="Total Pemilih" />
                     <x-card-total color="blue" :total="$tampilPemilih[0]->sudah_voting" text="Sudah Vote" />
-                    <x-card-total color="red" :total="$tampilPemilih[0]->belum_voting" text="Belum Vote" />
+                    <x-card-total color="red" :total="$tampilPemilih[0]->belum_voting ?? 0" text="Belum Vote" />
                     <x-card-total color="green" :total="$tampilCalon->count()" text="Total Calon" />
                 </div>
                 <div class="row m-0">
@@ -26,7 +27,7 @@
                         <h6>Pemilih Terbaru</h6>
                     </div>
                     <div class="card-content pb-4">
-                        <x-card-pemilih-terbaru :tampil-pemilih="$tampilPemilih" />
+                        <x-card-pemilih-terbaru :pemilih-terbaru="$pemilihTerbaru" />
                     </div>
                 </div>
                 {{-- Chart --}}
@@ -34,9 +35,15 @@
                     <div class="card-header">
                         <h4>Voting Chart</h4>
                     </div>
+                    @if ($tampilCalon->count() > 0)
                     <div class="p-2">
                         <canvas id="myChart"></canvas>
                     </div>
+                    @else
+                    <div class="card-body">
+                        <h6>Belum ada Voting</h6>
+                    </div>
+                    @endif
                 </div>
             </div>
         </section>

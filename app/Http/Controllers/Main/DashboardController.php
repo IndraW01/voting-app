@@ -22,7 +22,8 @@ class DashboardController extends Controller
     {
         return response()->view('main.dashboard', [
             'tampilCalon' => $this->calon->tampilCalon(),
-            'tampilPemilih' => $this->pemilih->tampilPemilih()
+            'tampilPemilih' => $this->pemilih->tampilPemilih(),
+            'pemilihTerbaru' => $this->pemilih->pemilihTerbaru()
         ]);
     }
 }

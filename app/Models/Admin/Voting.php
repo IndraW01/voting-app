@@ -9,6 +9,8 @@ class Voting extends Model
 {
     use HasFactory;
 
+    protected $with = ['calon'];
+
     protected $fillable = [
         'pemilih_id',
         'calon_id',
